@@ -15,7 +15,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -38,6 +40,9 @@ public class RobotContainer {
   // The driver's controller
   XboxController m_driverController = new XboxController(OperatorConstants.kDriverControllerPort);
 
+  // Power panel
+  PowerDistribution m_PowerDistribution = new PowerDistribution(Constants.kPdpCanId, ModuleType.kRev);
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -51,10 +56,10 @@ public class RobotContainer {
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
             () -> m_robotDrive.drive(
-                MathUtil.applyDeadband(-m_driverController.getLeftY(), 0.06),
-                MathUtil.applyDeadband(-m_driverController.getLeftX(), 0.06),
-                MathUtil.applyDeadband(-m_driverController.getRightX(), 0.06),
-                true),
+                MathUtil.applyDeadband(driveStickCurve(-m_driverController.getLeftY()), 0.06),
+                MathUtil.applyDeadband(driveStickCurve(-m_driverController.getLeftX()), 0.06),
+                MathUtil.applyDeadband(driveStickCurve(-m_driverController.getRightX()), 0.06),
+                false),
             m_robotDrive));
   }
 
@@ -119,5 +124,8 @@ public class RobotContainer {
 
     // Run path following command, then stop at the end.
     return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
+  }
+  private double driveStickCurve(double input){
+    return Math.copySign(Math.pow(input, 2), input);
   }
 }
