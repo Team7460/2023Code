@@ -4,7 +4,11 @@
 
 package frc.robot.subsystems;
 
+import java.util.HashMap;
+
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -15,7 +19,11 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.SerialPort;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -41,7 +49,9 @@ public class DriveSubsystem extends SubsystemBase {
       DriveConstants.kBackRightChassisAngularOffset);
 
   // The gyro sensor
-  private final AHRS m_gyro = new AHRS(SerialPort.Port.kMXP);
+  public final AHRS m_gyro = new AHRS(SerialPort.Port.kMXP);
+
+  public SwerveAutoBuilder autoBuilder;
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
@@ -54,9 +64,24 @@ public class DriveSubsystem extends SubsystemBase {
           m_rearRight.getPosition()
       });
 
+    
+
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
-    SendableRegistry.setName(m_gyro, getName(), 0);
+    HashMap<String, Command> eventMap = new HashMap<>();
+    eventMap.put("marker1", new PrintCommand("Passed marker 1"));
+
+    autoBuilder = new SwerveAutoBuilder(
+        this::getPose,
+        this::resetOdometry,
+        DriveConstants.kDriveKinematics, 
+        new PIDConstants(AutoConstants.kPXController, 0.0, 0.0),
+        new PIDConstants(AutoConstants.kPYController, 0.0, 0.0),
+        this::setModuleStates,
+        eventMap,
+        true,
+        this
+    );
   }
 
   @Override
