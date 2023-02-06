@@ -44,7 +44,7 @@ import frc.robot.subsystems.DriveSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems
-  private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  final DriveSubsystem m_robotDrive = new DriveSubsystem();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OperatorConstants.kDriverControllerPort);
@@ -68,7 +68,7 @@ public class RobotContainer {
                 MathUtil.applyDeadband(driveStickCurve(-m_driverController.getLeftY()), 0.01),
                 MathUtil.applyDeadband(driveStickCurve(-m_driverController.getLeftX()), 0.01),
                 MathUtil.applyDeadband(driveStickCurve(-m_driverController.getRightX()), 0.01),
-                false),
+                true),
             m_robotDrive));
   }
 
