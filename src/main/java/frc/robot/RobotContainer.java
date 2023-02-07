@@ -23,6 +23,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -34,6 +36,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.pneumaticconstants;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveSubsystem;
 
 /*
@@ -45,13 +49,14 @@ import frc.robot.subsystems.DriveSubsystem;
 public class RobotContainer {
   // The robot's subsystems
   final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  final Claw m_Claw = new Claw();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OperatorConstants.kDriverControllerPort);
 
   // Power panel
   PowerDistribution m_PowerDistribution = new PowerDistribution(Constants.kPdpCanId, ModuleType.kRev);
-
+  Compressor m_Compressor = new Compressor(pneumaticconstants.pcmID, PneumaticsModuleType.REVPH);
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -70,6 +75,7 @@ public class RobotContainer {
                 MathUtil.applyDeadband(driveStickCurve(-m_driverController.getRightX()), 0.01),
                 true),
             m_robotDrive));
+            m_Compressor.enableAnalog(0, 120);
   }
 
   /**
@@ -82,6 +88,7 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
+    new JoystickButton(m_driverController, XboxController.Button.kY.value).whileTrue(new RunCommand(() -> m_Claw.closeClaw(), m_Claw));
     // Hold the robot still when X is held
     new JoystickButton(m_driverController, XboxController.Button.kX.value)
         .whileTrue(new RunCommand(

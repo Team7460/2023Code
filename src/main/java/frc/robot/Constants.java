@@ -68,6 +68,10 @@ public final class Constants {
 
     public static final boolean kGyroReversed = false;
   }
+  public static final class pneumaticconstants {
+  public static final int pcmID = 1;
+  public static final int solenoid = 0;
+  }
 
   public static final class ModuleConstants {
     // The MAXSwerve module can be configured with one of three pinion gears: 12T,
