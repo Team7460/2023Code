@@ -66,11 +66,12 @@ public final class Constants {
     public static final int kFrontRightTurningCanId = 14;
     public static final int kRearRightTurningCanId = 16;
 
-    public static final boolean kGyroReversed = false;
+    public static final boolean kGyroReversed = true;
   }
-  public static final class pneumaticconstants {
-  public static final int pcmID = 1;
-  public static final int solenoid = 0;
+  public static final class PneumaticConstants {
+  public static final int kPcmId = 1;
+  public static final int kClawForwardSolenoidId = 0;
+  public static final int kClawBackwardSolenoidId = 1;
   }
 
   public static final class ModuleConstants {

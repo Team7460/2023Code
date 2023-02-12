@@ -14,6 +14,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
+import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -36,7 +37,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.Constants.pneumaticconstants;
+import frc.robot.Constants.PneumaticConstants;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -56,7 +57,7 @@ public class RobotContainer {
 
   // Power panel
   PowerDistribution m_PowerDistribution = new PowerDistribution(Constants.kPdpCanId, ModuleType.kRev);
-  Compressor m_Compressor = new Compressor(pneumaticconstants.pcmID, PneumaticsModuleType.REVPH);
+  Compressor m_Compressor = new Compressor(PneumaticConstants.kPcmId, PneumaticsModuleType.REVPH);
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
