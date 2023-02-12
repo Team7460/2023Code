@@ -4,37 +4,29 @@
 
 package frc.robot;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.auto.PIDConstants;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;
-
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.DriveSubsystem;
+
+import java.io.File;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -52,10 +44,31 @@ public class RobotContainer {
   // Power panel
   PowerDistribution m_PowerDistribution = new PowerDistribution(Constants.kPdpCanId, ModuleType.kRev);
 
+  // Auto selection
+  SendableChooser<String> m_chooser = new SendableChooser<>();
+  String m_autoChoosed;
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    // push PDP
+    SmartDashboard.putData(m_PowerDistribution);
+
+    // push gyro
+    SmartDashboard.putData(m_robotDrive.m_gyro);
+
+    // Configure the sendable chooser for auto picking
+    for (String routine:
+         getAutonomousRoutines()) {
+      routine = removeFileExtension(routine);
+      m_chooser.addOption(routine, routine);
+      System.out.println("Added " + routine);
+    }
+
+    m_chooser.setDefaultOption("FullAuto", "FullAuto");
+    SmartDashboard.putData(m_chooser);
+
     // Configure the button bindings
     configureButtonBindings();
 
@@ -96,12 +109,25 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     m_robotDrive.m_gyro.reset();
+    m_autoChoosed = m_chooser.getSelected();
     // Create config for trajectory
-    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("FullAuto", new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared));
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(m_autoChoosed, new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared));
 
     return m_robotDrive.autoBuilder.fullAuto(pathGroup);
   }
   private double driveStickCurve(double input){
     return Math.copySign(3 * Math.pow(input, 3), input);
+  }
+
+  private Set<String> getAutonomousRoutines(){
+    return Stream.of(Objects.requireNonNull(new File(Filesystem.getDeployDirectory() + "/pathplanner").listFiles())).filter(file -> !file.isDirectory()).map(File::getName).collect(Collectors.toSet());
+  }
+
+  private String removeFileExtension(String name){
+    if (name.indexOf(".") > 0) {
+      return name.substring(0, name.lastIndexOf("."));
+    } else {
+      return name;
+    }
   }
 }
