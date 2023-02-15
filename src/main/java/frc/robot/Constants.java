@@ -69,9 +69,13 @@ public final class Constants {
     public static final boolean kGyroReversed = true;
   }
   public static final class PneumaticConstants {
-  public static final int kPcmId = 1;
-  public static final int kClawForwardSolenoidId = 0;
-  public static final int kClawBackwardSolenoidId = 1;
+    public static final int kPcmId = 1;
+  }
+
+  public static final class ClawConstants {
+    public static final int kClawOpenCloseCanId = 3;
+    public static final int kClawLeftCanId = 4;
+    public static final int kClawRightCanId = 5;
   }
 
   public static final class ModuleConstants {

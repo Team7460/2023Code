@@ -1,19 +1,20 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import frc.robot.Constants.PneumaticConstants;
+import frc.robot.Constants;
 
 public class Claw extends SubsystemBase {
-    DoubleSolenoid mDoubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, PneumaticConstants.kClawForwardSolenoidId, PneumaticConstants.kClawBackwardSolenoidId);
+    CANSparkMax mClawOpenClose = new CANSparkMax(Constants.ClawConstants.kClawOpenCloseCanId, CANSparkMaxLowLevel.MotorType.kBrushless);
+    CANSparkMax mClawLeft = new CANSparkMax(Constants.ClawConstants.kClawLeftCanId, CANSparkMaxLowLevel.MotorType.kBrushless);
+    CANSparkMax mClawRight = new CANSparkMax(Constants.ClawConstants.kClawRightCanId, CANSparkMaxLowLevel.MotorType.kBrushless);
+
     public void openClaw(){
-       mDoubleSolenoid.set(Value.kForward);
+       mClawOpenClose.set(-0.5);
     }
-    public void closeClaw(){
-        mDoubleSolenoid.set(Value.kReverse);
+    public void closeClaw() {
+        mClawOpenClose.set(0.5);
     }
     public Claw() {}
 
