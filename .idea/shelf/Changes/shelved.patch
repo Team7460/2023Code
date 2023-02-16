@@ -1,0 +1,98 @@
+Index: vendordeps/REVLib.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{\r\n    \"fileName\": \"REVLib.json\",\r\n    \"name\": \"REVLib\",\r\n    \"version\": \"2023.1.1\",\r\n    \"uuid\": \"3f48eb8c-50fe-43a6-9cb7-44c86353c4cb\",\r\n    \"mavenUrls\": [\r\n        \"https://maven.revrobotics.com/\"\r\n    ],\r\n    \"jsonUrl\": \"https://software-metadata.revrobotics.com/REVLib-2023.json\",\r\n    \"javaDependencies\": [\r\n        {\r\n            \"groupId\": \"com.revrobotics.frc\",\r\n            \"artifactId\": \"REVLib-java\",\r\n            \"version\": \"2023.1.1\"\r\n        }\r\n    ],\r\n    \"jniDependencies\": [\r\n        {\r\n            \"groupId\": \"com.revrobotics.frc\",\r\n            \"artifactId\": \"REVLib-driver\",\r\n            \"version\": \"2023.1.1\",\r\n            \"skipInvalidPlatforms\": true,\r\n            \"isJar\": false,\r\n            \"validPlatforms\": [\r\n                \"windowsx86-64\",\r\n                \"windowsx86\",\r\n                \"linuxarm64\",\r\n                \"linuxx86-64\",\r\n                \"linuxathena\",\r\n                \"linuxarm32\",\r\n                \"osxuniversal\"\r\n            ]\r\n        }\r\n    ],\r\n    \"cppDependencies\": [\r\n        {\r\n            \"groupId\": \"com.revrobotics.frc\",\r\n            \"artifactId\": \"REVLib-cpp\",\r\n            \"version\": \"2023.1.1\",\r\n            \"libName\": \"REVLib\",\r\n            \"headerClassifier\": \"headers\",\r\n            \"sharedLibrary\": false,\r\n            \"skipInvalidPlatforms\": true,\r\n            \"binaryPlatforms\": [\r\n                \"windowsx86-64\",\r\n                \"windowsx86\",\r\n                \"linuxarm64\",\r\n                \"linuxx86-64\",\r\n                \"linuxathena\",\r\n                \"linuxarm32\",\r\n                \"osxuniversal\"\r\n            ]\r\n        },\r\n        {\r\n            \"groupId\": \"com.revrobotics.frc\",\r\n            \"artifactId\": \"REVLib-driver\",\r\n            \"version\": \"2023.1.1\",\r\n            \"libName\": \"REVLibDriver\",\r\n            \"headerClassifier\": \"headers\",\r\n            \"sharedLibrary\": false,\r\n            \"skipInvalidPlatforms\": true,\r\n            \"binaryPlatforms\": [\r\n                \"windowsx86-64\",\r\n                \"windowsx86\",\r\n                \"linuxarm64\",\r\n                \"linuxx86-64\",\r\n                \"linuxathena\",\r\n                \"linuxarm32\",\r\n                \"osxuniversal\"\r\n            ]\r\n        }\r\n    ]\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/vendordeps/REVLib.json b/vendordeps/REVLib.json
+--- a/vendordeps/REVLib.json	(revision 481686eade308f4b8e10fc79a71156a9fffbaca4)
++++ b/vendordeps/REVLib.json	(date 1676229142741)
+@@ -1,7 +1,7 @@
+ {
+     "fileName": "REVLib.json",
+     "name": "REVLib",
+-    "version": "2023.1.1",
++    "version": "2023.1.3",
+     "uuid": "3f48eb8c-50fe-43a6-9cb7-44c86353c4cb",
+     "mavenUrls": [
+         "https://maven.revrobotics.com/"
+@@ -11,14 +11,14 @@
+         {
+             "groupId": "com.revrobotics.frc",
+             "artifactId": "REVLib-java",
+-            "version": "2023.1.1"
++            "version": "2023.1.3"
+         }
+     ],
+     "jniDependencies": [
+         {
+             "groupId": "com.revrobotics.frc",
+             "artifactId": "REVLib-driver",
+-            "version": "2023.1.1",
++            "version": "2023.1.3",
+             "skipInvalidPlatforms": true,
+             "isJar": false,
+             "validPlatforms": [
+@@ -36,7 +36,7 @@
+         {
+             "groupId": "com.revrobotics.frc",
+             "artifactId": "REVLib-cpp",
+-            "version": "2023.1.1",
++            "version": "2023.1.3",
+             "libName": "REVLib",
+             "headerClassifier": "headers",
+             "sharedLibrary": false,
+@@ -54,7 +54,7 @@
+         {
+             "groupId": "com.revrobotics.frc",
+             "artifactId": "REVLib-driver",
+-            "version": "2023.1.1",
++            "version": "2023.1.3",
+             "libName": "REVLibDriver",
+             "headerClassifier": "headers",
+             "sharedLibrary": false,
+Index: vendordeps/photonlib.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{\r\n    \"fileName\": \"photonlib.json\",\r\n    \"name\": \"photonlib\",\r\n    \"version\": \"v2023.1.2\",\r\n    \"uuid\": \"515fe07e-bfc6-11fa-b3de-0242ac130004 \",\r\n    \"mavenUrls\": [\r\n        \"https://maven.photonvision.org/repository/internal\",\r\n        \"https://maven.photonvision.org/repository/snapshots\"\r\n    ],\r\n    \"jsonUrl\": \"https://maven.photonvision.org/repository/internal/org/photonvision/PhotonLib-json/1.0/PhotonLib-json-1.0.json\",\r\n    \"jniDependencies\": [],\r\n    \"cppDependencies\": [\r\n        {\r\n            \"groupId\": \"org.photonvision\",\r\n            \"artifactId\": \"PhotonLib-cpp\",\r\n            \"version\": \"v2023.1.2\",\r\n            \"libName\": \"Photon\",\r\n            \"headerClassifier\": \"headers\",\r\n            \"sharedLibrary\": true,\r\n            \"skipInvalidPlatforms\": true,\r\n            \"binaryPlatforms\": [\r\n                \"windowsx86-64\",\r\n                \"linuxathena\",\r\n                \"linuxx86-64\",\r\n                \"osxuniversal\"\r\n            ]\r\n        }\r\n    ],\r\n    \"javaDependencies\": [\r\n        {\r\n            \"groupId\": \"org.photonvision\",\r\n            \"artifactId\": \"PhotonLib-java\",\r\n            \"version\": \"v2023.1.2\"\r\n        },\r\n        {\r\n            \"groupId\": \"org.photonvision\",\r\n            \"artifactId\": \"PhotonTargeting-java\",\r\n            \"version\": \"v2023.1.2\"\r\n        }\r\n    ]\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/vendordeps/photonlib.json b/vendordeps/photonlib.json
+--- a/vendordeps/photonlib.json	(revision 481686eade308f4b8e10fc79a71156a9fffbaca4)
++++ b/vendordeps/photonlib.json	(date 1676229142727)
+@@ -1,7 +1,7 @@
+ {
+     "fileName": "photonlib.json",
+     "name": "photonlib",
+-    "version": "v2023.1.2",
++    "version": "v2023.3.0",
+     "uuid": "515fe07e-bfc6-11fa-b3de-0242ac130004 ",
+     "mavenUrls": [
+         "https://maven.photonvision.org/repository/internal",
+@@ -13,7 +13,7 @@
+         {
+             "groupId": "org.photonvision",
+             "artifactId": "PhotonLib-cpp",
+-            "version": "v2023.1.2",
++            "version": "v2023.3.0",
+             "libName": "Photon",
+             "headerClassifier": "headers",
+             "sharedLibrary": true,
+@@ -30,12 +30,12 @@
+         {
+             "groupId": "org.photonvision",
+             "artifactId": "PhotonLib-java",
+-            "version": "v2023.1.2"
++            "version": "v2023.3.0"
+         },
+         {
+             "groupId": "org.photonvision",
+             "artifactId": "PhotonTargeting-java",
+-            "version": "v2023.1.2"
++            "version": "v2023.3.0"
+         }
+     ]
+ }
+\ No newline at end of file
