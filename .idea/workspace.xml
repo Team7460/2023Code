@@ -4,23 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="01f1bb1c-0709-4e2c-be81-2880a0294f2b" name="Changes" comment="idea moment">
-      <change afterPath="$PROJECT_DIR$/.run/Build &amp; Deploy Robot for Debugging.run.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.run/Build &amp; Deploy Robot.run.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.run/Build &amp; Run Simulate Java.run.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.run/Build Robot.run.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.run/Clean Build &amp; Deploy Robot for Debugging.run.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.run/Clean Build &amp; Deploy Robot.run.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.run/Clean Build &amp; Run Simulate Java.run.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.run/Clean Build Robot.run.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.run/Clean.run.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.run/Debug Robot via IP.run.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.run/Debug Robot via USB.run.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.run/Launch Shuffleboard.run.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.run/Launch SmartDashboard.run.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/Robot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/Robot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/Claw.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/Claw.java" afterDir="false" />
-    </list>
+    <list default="true" id="01f1bb1c-0709-4e2c-be81-2880a0294f2b" name="Changes" comment="testing claw" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -42,7 +26,17 @@
         </task>
         <projects_view>
           <tree_state>
-            <expand />
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="2023Code" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="2023Code" type="f1a62948:ProjectNode" />
+                <item name="Run Configurations" type="7b0102dc:RunConfigurationsNode" />
+              </path>
+            </expand>
             <select />
           </tree_state>
         </projects_view>
@@ -61,6 +55,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2LTgHvM9zqCC8FF1WuXddJGFD6Q" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -147,7 +142,14 @@
       <option name="project" value="LOCAL" />
       <updated>1676508071777</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="testing claw">
+      <created>1676828409755</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1676828409755</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -183,7 +185,8 @@
     <MESSAGE value="Update vendordeps" />
     <MESSAGE value="Motorize claw code" />
     <MESSAGE value="idea moment" />
-    <option name="LAST_COMMIT_MESSAGE" value="idea moment" />
+    <MESSAGE value="testing claw" />
+    <option name="LAST_COMMIT_MESSAGE" value="testing claw" />
   </component>
   <component name="WpiLibVersionService">
     <option name="lastChecked" value="20230215183456" />

@@ -94,7 +94,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {m_robotContainer.m_Claw.eatGamePiece();}
+  public void testPeriodic() {
+    m_robotContainer.m_Claw.eatGamePiece();
+  }
 
   /** This function is called once when the robot is first started up. */
   @Override
