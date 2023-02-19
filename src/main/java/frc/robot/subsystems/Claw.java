@@ -16,6 +16,11 @@ public class Claw extends SubsystemBase {
     public void closeClaw() {
         mClawOpenClose.set(0.5);
     }
+
+    public void eatGamePiece() {
+        mClawLeft.set(0.5);
+        mClawRight.set(-0.5);
+    }
     public Claw() {}
 
 }
