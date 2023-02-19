@@ -4,28 +4,21 @@
 
 package frc.robot.subsystems;
 
-import java.util.HashMap;
-
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.util.sendable.SendableRegistry;
-import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.SPI;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.DriveConstants;
+
+import java.util.HashMap;
+import java.util.function.DoubleSupplier;
 
 public class DriveSubsystem extends SubsystemBase {
   // Create MAXSwerveModules
@@ -50,7 +43,7 @@ public class DriveSubsystem extends SubsystemBase {
       DriveConstants.kBackRightChassisAngularOffset);
 
   // The gyro sensor
-  public final AHRS m_gyro;
+  public AHRS m_gyro;
 
   public SwerveAutoBuilder autoBuilder;
 
@@ -213,4 +206,13 @@ public class DriveSubsystem extends SubsystemBase {
   public double getTurnRate() {
     return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
+
+  /**
+   * Returns the tilt of the robot
+   *
+   * @return The tilt of the robot, from 180 to -180
+   */
+  //TILTED TOWERS AHAHAHAHAHAHAH
+  public DoubleSupplier getTilt = () -> m_gyro.getPitch();
+
 }
