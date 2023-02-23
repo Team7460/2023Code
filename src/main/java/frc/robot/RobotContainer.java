@@ -16,7 +16,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.PneumaticConstants;
-import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 
 import java.util.List;
@@ -30,14 +31,15 @@ import java.util.List;
 public class RobotContainer {
   // The robot's subsystems
   final DriveSubsystem m_robotDrive = new DriveSubsystem();
-  final Claw m_Claw = new Claw();
+  final ClawSubsystem m_claw = new ClawSubsystem();
+  final ArmSubsystem m_arm = new ArmSubsystem();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OperatorConstants.kDriverControllerPort);
 
   // Power panel
   PowerDistribution m_PowerDistribution = new PowerDistribution(Constants.kPdpCanId, ModuleType.kRev);
-  Compressor m_Compressor = new Compressor(PneumaticConstants.kPcmId, PneumaticsModuleType.REVPH);
+  Compressor m_compressor = new Compressor(PneumaticConstants.kPcmId, PneumaticsModuleType.REVPH);
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -56,7 +58,10 @@ public class RobotContainer {
                 MathUtil.applyDeadband(driveStickCurve(-m_driverController.getRightX()), 0.01),
                 true),
             m_robotDrive));
-            m_Compressor.enableAnalog(0, 120);
+
+    m_arm.setDefaultCommand(new RunCommand(() -> m_arm.setMotorSpeed(m_driverController.getLeftTriggerAxis()),m_arm));
+
+    m_compressor.enableAnalog(80, 120);
   }
 
   /**
@@ -69,13 +74,13 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, XboxController.Button.kY.value).whileTrue(new RunCommand(m_Claw::closeClaw, m_Claw));
+    new JoystickButton(m_driverController, XboxController.Button.kY.value).whileTrue(new RunCommand(m_claw::closeClaw, m_claw));
     // Hold the robot still when X is held
     new JoystickButton(m_driverController, XboxController.Button.kX.value)
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
-    new JoystickButton(m_driverController, XboxController.Button.kA.value).whileTrue(new RunCommand(m_Claw::openClaw, m_Claw));
+    new JoystickButton(m_driverController, XboxController.Button.kA.value).whileTrue(new RunCommand(m_claw::openClaw, m_claw));
   }
 
   /**

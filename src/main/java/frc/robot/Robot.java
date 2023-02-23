@@ -47,6 +47,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     SmartDashboard.putString("heading", m_robotContainer.m_robotDrive.m_gyro.getRotation2d().toString());
     SmartDashboard.putBoolean("isConnected", m_robotContainer.m_robotDrive.m_gyro.isConnected());
+    SmartDashboard.putNumber("Compressor PSI", m_robotContainer.m_compressor.getPressure());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -95,7 +96,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
-    m_robotContainer.m_Claw.eatGamePiece();
+    m_robotContainer.m_claw.closeClaw();
   }
 
   /** This function is called once when the robot is first started up. */
