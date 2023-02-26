@@ -81,6 +81,7 @@ public final class Constants {
 
   public static final class ArmConstants {
     public static final int kArmMotorCanId = 3;
+    public static final int kArmExtendCanId = 4;
   }
 
   public static final class ModuleConstants {

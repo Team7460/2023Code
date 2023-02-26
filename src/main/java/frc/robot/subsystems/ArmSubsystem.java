@@ -8,10 +8,11 @@ import frc.robot.Constants;
 
 public class ArmSubsystem extends SubsystemBase {
     CANSparkMax mArmPivotMotor = new CANSparkMax(Constants.ArmConstants.kArmMotorCanId, CANSparkMaxLowLevel.MotorType.kBrushless);
-
+    CANSparkMax mArmExtendMotor = new CANSparkMax(Constants.ArmConstants.kArmExtendCanId, CANSparkMaxLowLevel.MotorType.kBrushless);
     public void setPivotMotorSpeed(double speed){
         mArmPivotMotor.set(speed);
     }
+    public void setExtendMotorSpeed(double speed) { mArmExtendMotor.set(speed); }
     public ArmSubsystem() {
 
     }
