@@ -5,14 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="01f1bb1c-0709-4e2c-be81-2880a0294f2b" name="Changes" comment="testing claw">
-      <change afterPath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/ArmSubsystem.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/ClawSubsystem.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/deploy/pathplanner/New Path.path" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/deploy/pathplanner/New Path.path" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/Constants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/Robot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/Robot.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/RobotContainer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/RobotContainer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/Claw.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/ArmSubsystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/ArmSubsystem.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,7 +79,7 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
 }</component>
-  <component name="RunManager" selected="Gradle.Build &amp; Deploy Robot">
+  <component name="RunManager">
     <list>
       <item itemvalue="Gradle.Build &amp; Deploy Robot" />
       <item itemvalue="Gradle.Build &amp; Deploy Robot for Debugging" />
