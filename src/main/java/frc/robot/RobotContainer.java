@@ -59,9 +59,9 @@ public class RobotContainer {
                 true),
             m_robotDrive));
 
-    m_arm.setDefaultCommand(new RunCommand(() -> m_arm.setMotorSpeed(m_driverController.getLeftTriggerAxis()),m_arm));
+    m_arm.setDefaultCommand(new RunCommand(() -> m_arm.setPivotMotorSpeed(m_driverController.getLeftTriggerAxis()),m_arm));
 
-    m_compressor.enableAnalog(80, 120);
+    m_compressor.enableAnalog(60, 120);
   }
 
   /**
