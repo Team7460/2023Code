@@ -63,7 +63,9 @@ public class RobotContainer {
 
     m_compressor.enableAnalog(60, 120);
   }
-
+//if(robot == true)[
+//        Set.win=TRUE;
+//]
   /**
    * Use this method to define your button->command mappings. Buttons can be
    * created by
