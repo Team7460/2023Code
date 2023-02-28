@@ -66,7 +66,22 @@ public final class Constants {
     public static final int kFrontRightTurningCanId = 14;
     public static final int kRearRightTurningCanId = 16;
 
-    public static final boolean kGyroReversed = false;
+    public static final boolean kGyroReversed = true;
+  }
+  public static final class PneumaticConstants {
+    public static final int kPcmId = 1;
+  }
+
+  public static final class ClawConstants {
+    public static final int kLeftForwardSolenoidId = 1;
+    public static final int kLeftReverseSolenoidId = 2;
+    public static final int kRightForwardSolenoidId = 3;
+    public static final int kRightReverseSolenoidId = 4;
+  }
+
+  public static final class ArmConstants {
+    public static final int kArmMotorCanId = 3;
+    public static final int kArmExtendCanId = 4;
   }
 
   public static final class ModuleConstants {

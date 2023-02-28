@@ -10,6 +10,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -19,6 +20,9 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.PneumaticConstants;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 
 import java.io.File;
@@ -27,6 +31,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.List;
+
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -37,6 +43,8 @@ import java.util.stream.Stream;
 public class RobotContainer {
   // The robot's subsystems
   final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  final ClawSubsystem m_claw = new ClawSubsystem();
+  final ArmSubsystem m_arm = new ArmSubsystem();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OperatorConstants.kDriverControllerPort);
@@ -48,6 +56,8 @@ public class RobotContainer {
   SendableChooser<String> m_chooser = new SendableChooser<>();
   String m_autoChoosed;
 
+  Compressor m_compressor = new Compressor(PneumaticConstants.kPcmId, PneumaticsModuleType.REVPH);
+  
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -83,8 +93,14 @@ public class RobotContainer {
                 MathUtil.applyDeadband(driveStickCurve(-m_driverController.getRightX()), 0.01),
                 true),
             m_robotDrive));
-  }
 
+    m_arm.setDefaultCommand(new RunCommand(() -> m_arm.setExtendMotorSpeed(m_driverController.getLeftTriggerAxis()),m_arm));
+
+    m_compressor.enableAnalog(60, 120);
+  }
+//if(robot == true)[
+//        Set.win=TRUE;
+//]
   /**
    * Use this method to define your button->command mappings. Buttons can be
    * created by
@@ -95,11 +111,13 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
+    new JoystickButton(m_driverController, XboxController.Button.kY.value).whileTrue(new RunCommand(m_claw::closeClaw, m_claw));
     // Hold the robot still when X is held
     new JoystickButton(m_driverController, XboxController.Button.kX.value)
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
+    new JoystickButton(m_driverController, XboxController.Button.kA.value).whileTrue(new RunCommand(m_claw::openClaw, m_claw));
   }
 
   /**
