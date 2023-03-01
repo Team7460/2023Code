@@ -29,7 +29,7 @@ public final class Constants {
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
-    public static final int kManipulatorControllerPort = 1;
+    public static final int kMechanismerControllerPort = 1;
   }
 
   public static final class DriveConstants {
@@ -73,10 +73,8 @@ public final class Constants {
   }
 
   public static final class ClawConstants {
-    public static final int kLeftForwardSolenoidId = 1;
-    public static final int kLeftReverseSolenoidId = 2;
-    public static final int kRightForwardSolenoidId = 3;
-    public static final int kRightReverseSolenoidId = 4;
+    public static final int kForwardSolenoidId = 0;
+    public static final int kReverseSolenoidId = 1;
   }
 
   public static final class ArmConstants {

@@ -7,7 +7,6 @@ import frc.robot.subsystems.DriveSubsystem;
 
 
 public class BalanceCommand extends PIDCommand {
-    private final DriveSubsystem driveSubsystem;
 
     public BalanceCommand(DriveSubsystem driveSubsystem) {
         super(
@@ -17,10 +16,7 @@ public class BalanceCommand extends PIDCommand {
                 output -> driveSubsystem.drive(output, 0, 0, true),
                 driveSubsystem
         );
-        this.driveSubsystem = driveSubsystem;
-        // each subsystem used by the command must be passed into the
-        // addRequirements() method (which takes a vararg of Subsystem)
-        addRequirements(this.driveSubsystem);
+        addRequirements(driveSubsystem);
         getController().enableContinuousInput(-180, 180);
         getController().setTolerance(1);
     }

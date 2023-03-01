@@ -6,21 +6,17 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ClawSubsystem extends SubsystemBase {
-    DoubleSolenoid mLeftSide = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.ClawConstants.kLeftForwardSolenoidId, Constants.ClawConstants.kLeftReverseSolenoidId);
-    DoubleSolenoid mRightSide = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.ClawConstants.kRightForwardSolenoidId, Constants.ClawConstants.kRightReverseSolenoidId);
+    DoubleSolenoid mSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.ClawConstants.kForwardSolenoidId, Constants.ClawConstants.kReverseSolenoidId);
 
     public void closeClaw(){
-       mLeftSide.set(DoubleSolenoid.Value.kForward);
-       mRightSide.set(DoubleSolenoid.Value.kForward);
+       mSolenoid.set(DoubleSolenoid.Value.kForward);
     }
     public void openClaw() {
-        mLeftSide.set(DoubleSolenoid.Value.kReverse);
-        mRightSide.set(DoubleSolenoid.Value.kReverse);
+        mSolenoid.set(DoubleSolenoid.Value.kReverse);
     }
 
     public ClawSubsystem() {
-        addChild("leftSide", mLeftSide);
-        addChild("rightSide", mRightSide);
+        addChild("solenoid", mSolenoid);
     }
 }
     
