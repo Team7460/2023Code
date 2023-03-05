@@ -12,12 +12,11 @@ import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PneumaticConstants;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.subsystems.ArmSubsystem;
@@ -45,10 +44,10 @@ public class RobotContainer {
     final ArmSubsystem m_arm = new ArmSubsystem();
 
     // The driver's controller
-    XboxController m_driverController = new XboxController(OperatorConstants.kDriverControllerPort);
+    XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
 
     // The mechanismer's controller
-    XboxController m_mechanismerController = new XboxController(OperatorConstants.kMechanismerControllerPort);
+    XboxController m_mechanismerController = new XboxController(OIConstants.kMechanismerControllerPort);
 
     // Power panel
     PowerDistribution m_PowerDistribution = new PowerDistribution(Constants.kPdpCanId, ModuleType.kRev);
@@ -80,7 +79,7 @@ public class RobotContainer {
             System.out.println("Added " + routine);
         }
 
-        m_chooser.setDefaultOption("FullAuto", "FullAuto");
+        m_chooser.setDefaultOption("No Auto", "No Auto");
         SmartDashboard.putData(m_chooser);
 
         // Configure the button bindings
@@ -100,12 +99,15 @@ public class RobotContainer {
         m_arm.setDefaultCommand(
                 new RunCommand(
                         () -> {
-                            m_arm.setExtendMotorSpeed(m_mechanismerController.getRightY());
-                            m_arm.setPivotMotorSpeed(m_mechanismerController.getLeftY());
+                            m_arm.setExtendMotorSpeed(m_mechanismerController.getRightY() * 0.15);
+                            m_arm.setPivotMotorPositionSetpoint(m_arm.getSetpoint() + (MathUtil.applyDeadband(-m_mechanismerController.getLeftY(), OIConstants.kDriveDeadband) * 0.20));
                         },
                         m_arm));
 
         m_compressor.enableAnalog(60, 120);
+
+        // Put auto delay
+        SmartDashboard.putNumber("Auto Delay", 0);
     }
 //if(robot == true)[
 //        Set.win=TRUE;
@@ -125,7 +127,7 @@ public class RobotContainer {
         // Hold the robot still when X is held
         new JoystickButton(m_driverController, XboxController.Button.kX.value)
                 .whileTrue(new RunCommand(
-                        () -> m_robotDrive.setX(),
+                        m_robotDrive::setX,
                         m_robotDrive));
 
         // Autobalance (Trevor touched this so double check this please)
@@ -134,7 +136,7 @@ public class RobotContainer {
 
         // Toggle field-relative control
         new POVButton(m_driverController, 0)
-                .toggleOnTrue(new RunCommand(() -> m_isFieldCentric = !m_isFieldCentric));
+                .toggleOnTrue(new InstantCommand(() -> m_isFieldCentric = !m_isFieldCentric,m_robotDrive));
                 //changed ".onTrue" to ".toggleOnTrue" (Trevor)
         //endregion
 
@@ -161,16 +163,14 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        m_robotDrive.m_gyro.reset();
         m_autoChoosed = m_chooser.getSelected();
         // Create config for trajectory
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(m_autoChoosed, new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared));
-
-        return m_robotDrive.autoBuilder.fullAuto(pathGroup);
+        return new SequentialCommandGroup(new WaitCommand(SmartDashboard.getNumber("Auto Delay", 0)),  m_robotDrive.autoBuilder.fullAuto(pathGroup));
     }
 
     private double driveStickCurve(double input) {
-        return Math.copySign(3 * Math.pow(input, 3), input);
+        return Math.copySign(Math.pow(input, 3), input);
     }
 
     private Set<String> getAutonomousRoutines() {

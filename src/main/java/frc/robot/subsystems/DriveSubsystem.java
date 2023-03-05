@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -42,6 +43,8 @@ public class DriveSubsystem extends SubsystemBase {
       DriveConstants.kRearRightTurningCanId,
       DriveConstants.kBackRightChassisAngularOffset);
 
+  private Field2d m_field = new Field2d();
+
   // The gyro sensor
   public AHRS m_gyro;
 
@@ -56,8 +59,7 @@ public class DriveSubsystem extends SubsystemBase {
   public DriveSubsystem() {
     m_gyro = new AHRS(SPI.Port.kMXP);
     m_gyro.enableLogging(true);
-    m_gyro.reset();
-  
+
     m_odometry = new SwerveDriveOdometry(
       DriveConstants.kDriveKinematics,
       Rotation2d.fromDegrees(-m_gyro.getAngle()),
@@ -213,6 +215,6 @@ public class DriveSubsystem extends SubsystemBase {
    * @return The tilt of the robot, from 180 to -180
    */
   //TILTED TOWERS AHAHAHAHAHAHAH
-  public DoubleSupplier getTilt = () -> m_gyro.getPitch();
+  public DoubleSupplier getTilt = () -> m_gyro.getRoll();
 
 }

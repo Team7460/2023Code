@@ -27,7 +27,7 @@ public final class Constants {
 
   public static final int kPdpCanId = 1;
 
-  public static class OperatorConstants {
+  public static class OIConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kMechanismerControllerPort = 1;
   }

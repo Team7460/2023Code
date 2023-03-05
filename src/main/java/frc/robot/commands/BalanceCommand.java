@@ -1,8 +1,8 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
-import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 
 
@@ -10,32 +10,15 @@ public class BalanceCommand extends PIDCommand {
 
     public BalanceCommand(DriveSubsystem driveSubsystem) {
         super(
-                new PIDController(Constants.AutoConstants.kPXController, 0,0),
+                new PIDController(0.5, 0,0),
                 driveSubsystem.getTilt,
                 0,
-                output -> driveSubsystem.drive(output, 0, 0, true),
+                output -> driveSubsystem.drive(MathUtil.clamp(output, -0.15, 0.15), 0, 0, true, true),
                 driveSubsystem
         );
         addRequirements(driveSubsystem);
         getController().enableContinuousInput(-180, 180);
-        getController().setTolerance(1);
-    }
-
-    /**
-     * The initial subroutine of a command.  Called once when the command is initially scheduled.
-     */
-    @Override
-    public void initialize() {
-
-    }
-
-    /**
-     * The main body of a command.  Called repeatedly while the command is scheduled.
-     * (That is, it is called repeatedly until {@link #isFinished()}) returns true.)
-     */
-    @Override
-    public void execute() {
-
+        getController().setTolerance(2);
     }
 
     /**
@@ -55,18 +38,5 @@ public class BalanceCommand extends PIDCommand {
     @Override
     public boolean isFinished() {
         return getController().atSetpoint();
-    }
-
-    /**
-     * The action to take when the command ends. Called when either the command
-     * finishes normally -- that is it is called when {@link #isFinished()} returns
-     * true -- or when  it is interrupted/canceled. This is where you may want to
-     * wrap up loose ends, like shutting off a motor that was being used in the command.
-     *
-     * @param interrupted whether the command was interrupted/canceled
-     */
-    @Override
-    public void end(boolean interrupted) {
-
     }
 }
