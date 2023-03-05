@@ -86,13 +86,14 @@ public class RobotContainer {
         configureButtonBindings();
 
         // Drive robot with the driver sticks
+        //TODO: add drivestick curve
         m_robotDrive.setDefaultCommand(
                 new RunCommand(
                         () -> m_robotDrive.drive(
-                                MathUtil.applyDeadband(driveStickCurve(-m_driverController.getLeftY()), 0.01),
-                                MathUtil.applyDeadband(driveStickCurve(-m_driverController.getLeftX()), 0.01),
-                                MathUtil.applyDeadband(driveStickCurve(-m_driverController.getRightX()), 0.01),
-                                m_isFieldCentric),
+                                MathUtil.applyDeadband(driveStickCurve(m_driverController.getLeftY()), OIConstants.kDriveDeadband),
+                                MathUtil.applyDeadband(driveStickCurve(m_driverController.getLeftX()), OIConstants.kDriveDeadband),
+                                MathUtil.applyDeadband(driveStickCurve(-m_driverController.getRightX()), OIConstants.kDriveDeadband),
+                                m_isFieldCentric, false),
                         m_robotDrive));
 
         // Extend and pivot arm with the mechanismer's sticks
