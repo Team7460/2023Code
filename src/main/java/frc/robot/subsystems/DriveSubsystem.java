@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.utils.SwerveUtils;
+import org.photonvision.PhotonCamera;
 
 import java.util.HashMap;
 import java.util.function.DoubleSupplier;
@@ -65,7 +66,8 @@ public class DriveSubsystem extends SubsystemBase {
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
 
-    
+  // Limelight (with extra PhotonVision)
+  public PhotonCamera m_camera = new PhotonCamera("photonvision");
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
@@ -83,7 +85,7 @@ public class DriveSubsystem extends SubsystemBase {
       });
 
     HashMap<String, Command> eventMap = new HashMap<>();
-    eventMap.put("marker1", new PrintCommand("Passed marker 1"));
+    eventMap.put("balance", new PrintCommand("pathplanner skill issue"));
 
     autoBuilder = new SwerveAutoBuilder(
         this::getPose,

@@ -167,7 +167,7 @@ public class RobotContainer {
         m_autoChoosed = m_chooser.getSelected();
         // Create config for trajectory
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(m_autoChoosed, new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared));
-        return new SequentialCommandGroup(new WaitCommand(SmartDashboard.getNumber("Auto Delay", 0)),  m_robotDrive.autoBuilder.fullAuto(pathGroup));
+        return new SequentialCommandGroup(new WaitCommand(SmartDashboard.getNumber("Auto Delay", 0)),  m_robotDrive.autoBuilder.fullAuto(pathGroup), new BalanceCommand(m_robotDrive));
     }
 
     private double driveStickCurve(double input) {
