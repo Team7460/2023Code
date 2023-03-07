@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -13,12 +14,13 @@ public class BalanceCommand extends PIDCommand {
                 new PIDController(0.5, 0,0),
                 driveSubsystem.getTilt,
                 0,
-                output -> driveSubsystem.drive(MathUtil.clamp(output, -0.15, 0.15), 0, 0, true, true),
+                output -> driveSubsystem.drive(-MathUtil.clamp(output, -0.15, 0.15), 0, 0, false, true),
                 driveSubsystem
         );
         addRequirements(driveSubsystem);
         getController().enableContinuousInput(-180, 180);
         getController().setTolerance(2);
+        SmartDashboard.putNumber("error",getController().getPositionError());
     }
 
     /**
