@@ -8,6 +8,7 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -19,6 +20,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PneumaticConstants;
 import frc.robot.commands.BalanceCommand;
+import frc.robot.commands.LimelightCenterCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -61,6 +63,9 @@ public class RobotContainer {
     // are we field centric?
     boolean m_isFieldCentric = true;
 
+    // drive stick slowdown :3
+    double drive_multiplier = 1;
+
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -100,7 +105,8 @@ public class RobotContainer {
         m_arm.setDefaultCommand(
                 new RunCommand(
                         () -> {
-                            m_arm.setExtendMotorSpeed(m_mechanismerController.getRightY() * 0.15);
+                            m_arm.setExtendMotorSpeed(m_mechanismerController.getRightY() * 0.2);
+                            //Trevor changed from 0.15 to 0.2
                             m_arm.setPivotMotorPositionSetpoint(m_arm.getSetpoint() + (MathUtil.applyDeadband(-m_mechanismerController.getLeftY(), OIConstants.kDriveDeadband) * 0.20));
                         },
                         m_arm));
@@ -109,6 +115,9 @@ public class RobotContainer {
 
         // Put auto delay
         SmartDashboard.putNumber("Auto Delay", 0);
+
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1); // Set into driver mode
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1); // Turn leds off
     }
 //if(robot == true)[
 //        Set.win=TRUE;
@@ -135,6 +144,14 @@ public class RobotContainer {
         new JoystickButton(m_driverController, XboxController.Button.kY.value)
                 .whileTrue(new BalanceCommand(m_robotDrive));
 
+        new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value)
+                .toggleOnTrue(new InstantCommand(() -> drive_multiplier /= 2))
+                .toggleOnFalse(new InstantCommand(() -> drive_multiplier *= 2));
+
+        new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
+                .toggleOnFalse(new InstantCommand(() -> drive_multiplier /= 2))
+                .toggleOnTrue(new InstantCommand(() -> drive_multiplier *= 2));
+
         // Toggle field-relative control
         new POVButton(m_driverController, 0)
                 .toggleOnTrue(new InstantCommand(() -> m_isFieldCentric = !m_isFieldCentric,m_robotDrive));
@@ -149,6 +166,9 @@ public class RobotContainer {
         // Open the claw
         new JoystickButton(m_mechanismerController, XboxController.Button.kRightBumper.value)
                 .whileTrue(new RunCommand(m_claw::openClaw));
+
+        new JoystickButton(m_mechanismerController, XboxController.Button.kA.value)
+                .whileTrue(new LimelightCenterCommand(m_robotDrive));
 
         // Move the claw in and the arm down
         // TODO: do this
@@ -167,11 +187,11 @@ public class RobotContainer {
         m_autoChoosed = m_chooser.getSelected();
         // Create config for trajectory
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(m_autoChoosed, new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared));
-        return new SequentialCommandGroup(new WaitCommand(SmartDashboard.getNumber("Auto Delay", 0)),  m_robotDrive.autoBuilder.fullAuto(pathGroup), new BalanceCommand(m_robotDrive));
+        return new SequentialCommandGroup(new WaitCommand(SmartDashboard.getNumber("Auto Delay", 0)),  m_robotDrive.autoBuilder.fullAuto(pathGroup));
     }
 
     private double driveStickCurve(double input) {
-        return Math.copySign(Math.pow(input, 3), input);
+        return Math.copySign(Math.pow(input, 3), input) * drive_multiplier;
     }
 
     private Set<String> getAutonomousRoutines() {

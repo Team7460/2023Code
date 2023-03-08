@@ -11,6 +11,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.*;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -20,7 +21,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.utils.SwerveUtils;
-import org.photonvision.PhotonCamera;
 
 import java.util.HashMap;
 import java.util.function.DoubleSupplier;
@@ -66,9 +66,6 @@ public class DriveSubsystem extends SubsystemBase {
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
 
-  // Limelight (with extra PhotonVision)
-  public PhotonCamera m_camera = new PhotonCamera("photonvision");
-
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     m_gyro = new AHRS(SPI.Port.kMXP);
@@ -100,6 +97,7 @@ public class DriveSubsystem extends SubsystemBase {
     );
 
     m_gyro.calibrate();
+
   }
 
   @Override
@@ -282,6 +280,6 @@ public class DriveSubsystem extends SubsystemBase {
    * @return The tilt of the robot, from 180 to -180
    */
   //TILTED TOWERS AHAHAHAHAHAHAH
-  public DoubleSupplier getTilt = () -> m_gyro.getRoll();
+  public DoubleSupplier getTilt = () ->  m_gyro.getRoll();
 
 }
