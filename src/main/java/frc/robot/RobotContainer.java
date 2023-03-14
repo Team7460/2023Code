@@ -106,7 +106,7 @@ public class RobotContainer {
                 new RunCommand(
                         () -> {
                             m_arm.setExtendMotorSpeed(m_mechanismerController.getRightY() * 0.35);
-                            m_arm.setPivotMotorPositionSetpoint(m_arm.getSetpoint() + (MathUtil.applyDeadband(-m_mechanismerController.getLeftY(), OIConstants.kDriveDeadband) * 0.30));
+                            m_arm.setPivotMotorPositionSetpoint(m_arm.getSetpoint() + (MathUtil.applyDeadband(-m_mechanismerController.getLeftY(), OIConstants.kDriveDeadband) * 0.35));
                         },
                         m_arm));
 
