@@ -105,9 +105,8 @@ public class RobotContainer {
         m_arm.setDefaultCommand(
                 new RunCommand(
                         () -> {
-                            m_arm.setExtendMotorSpeed(m_mechanismerController.getRightY() * 0.2);
-                            //Trevor changed from 0.15 to 0.2
-                            m_arm.setPivotMotorPositionSetpoint(m_arm.getSetpoint() + (MathUtil.applyDeadband(-m_mechanismerController.getLeftY(), OIConstants.kDriveDeadband) * 0.20));
+                            m_arm.setExtendMotorSpeed(m_mechanismerController.getRightY() * 0.35);
+                            m_arm.setPivotMotorPositionSetpoint(m_arm.getSetpoint() + (MathUtil.applyDeadband(-m_mechanismerController.getLeftY(), OIConstants.kDriveDeadband) * 0.30));
                         },
                         m_arm));
 
@@ -187,7 +186,9 @@ public class RobotContainer {
         m_autoChoosed = m_chooser.getSelected();
         // Create config for trajectory
         List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(m_autoChoosed, new PathConstraints(AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared));
-        return new SequentialCommandGroup(new WaitCommand(SmartDashboard.getNumber("Auto Delay", 0)),  m_robotDrive.autoBuilder.fullAuto(pathGroup));
+        return new SequentialCommandGroup(new WaitCommand(SmartDashboard.getNumber("Auto Delay", 0)),
+                m_robotDrive.autoBuilder.fullAuto(pathGroup),
+                new RunCommand(m_robotDrive::setX, m_robotDrive));
     }
 
     private double driveStickCurve(double input) {
