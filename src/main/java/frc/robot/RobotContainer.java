@@ -16,11 +16,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PneumaticConstants;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.LimelightCenterCommand;
+import frc.robot.commands.TurnToAngleCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -63,8 +65,8 @@ public class RobotContainer {
   // are we field centric?
   boolean m_isFieldCentric = true;
 
-  // drive stick slowdown :3
-  double drive_multiplier = 1;
+  // me when thrust button
+  boolean m_thrust = false;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -143,26 +145,32 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // region Driver
-    // Hold the robot still when X is held
-    new JoystickButton(m_driverController, XboxController.Button.kX.value)
-        .whileTrue(new RunCommand(m_robotDrive::setX, m_robotDrive));
-
-    // Autobalance (Trevor touched this so double check this please)
-    new JoystickButton(m_driverController, XboxController.Button.kY.value)
-        .whileTrue(new BalanceCommand(m_robotDrive));
-
-    new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value)
-        .toggleOnTrue(new InstantCommand(() -> drive_multiplier /= 2))
-        .toggleOnFalse(new InstantCommand(() -> drive_multiplier *= 2));
-
-    new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
-        .toggleOnFalse(new InstantCommand(() -> drive_multiplier /= 2))
-        .toggleOnTrue(new InstantCommand(() -> drive_multiplier *= 2));
+    new Trigger(() -> m_driverController.getRightTriggerAxis() >= 0.25)
+        .toggleOnTrue(new InstantCommand(() -> m_thrust = !m_thrust, m_robotDrive));
 
     // Toggle field-relative control
     new POVButton(m_driverController, 0)
         .toggleOnTrue(new InstantCommand(() -> m_isFieldCentric = !m_isFieldCentric, m_robotDrive));
-    // changed ".onTrue" to ".toggleOnTrue" (Trevor)
+
+    // Autobalance
+    new POVButton(m_driverController, 90).onTrue(new BalanceCommand(m_robotDrive));
+
+    // Hold the robot in an X shape
+    new POVButton(m_driverController, 180)
+        .whileTrue(new RunCommand(m_robotDrive::setX, m_robotDrive));
+
+    // Turn field relative
+    new JoystickButton(m_driverController, XboxController.Button.kY.value)
+        .whileTrue(new TurnToAngleCommand(m_robotDrive, 0));
+
+    new JoystickButton(m_driverController, XboxController.Button.kB.value)
+        .whileTrue(new TurnToAngleCommand(m_robotDrive, 90));
+
+    new JoystickButton(m_driverController, XboxController.Button.kA.value)
+        .whileTrue(new TurnToAngleCommand(m_robotDrive, 180));
+
+    new JoystickButton(m_driverController, XboxController.Button.kX.value)
+        .whileTrue(new TurnToAngleCommand(m_robotDrive, -90));
     // endregion
 
     // region Mechanismer
@@ -205,8 +213,16 @@ public class RobotContainer {
         new RunCommand(m_robotDrive::setX, m_robotDrive));
   }
 
+  private double getThrustMultiplier() {
+    if (m_thrust) {
+      return 1;
+    } else {
+      return 0.6;
+    }
+  }
+
   private double driveStickCurve(double input) {
-    return Math.copySign(Math.pow(input, 3), input) * drive_multiplier;
+    return Math.copySign(Math.pow(input, 3), input) * getThrustMultiplier();
   }
 
   private Set<String> getAutonomousRoutines() {

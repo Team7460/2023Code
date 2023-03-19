@@ -5,12 +5,13 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class BalanceCommand extends CommandBase {
+public class TurnToAngleCommand extends CommandBase {
   private final DriveSubsystem driveSubsystem;
-
   private PIDController controller = new PIDController(1, 0, 0);
+  private final double angle;
 
-  public BalanceCommand(DriveSubsystem driveSubsystem) {
+  public TurnToAngleCommand(DriveSubsystem driveSubsystem, double angle) {
+    this.angle = angle;
     this.driveSubsystem = driveSubsystem;
     addRequirements(this.driveSubsystem);
   }
@@ -28,9 +29,9 @@ public class BalanceCommand extends CommandBase {
    */
   @Override
   public void execute() {
-    double output = controller.calculate(driveSubsystem.m_gyro.getRoll(), 0);
+    double output = controller.calculate(driveSubsystem.m_gyro.getYaw(), this.angle);
     output = MathUtil.clamp(output, -0.2, 0.2);
-    driveSubsystem.drive(-output, 0, 0, false, false);
+    driveSubsystem.drive(0, 0, output, false, false);
   }
 
   /**
@@ -61,6 +62,5 @@ public class BalanceCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     driveSubsystem.drive(0, 0, 0, false, false);
-    driveSubsystem.setX();
   }
 }
