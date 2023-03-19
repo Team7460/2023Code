@@ -8,6 +8,7 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -146,7 +147,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // region Driver
     new Trigger(() -> m_driverController.getRightTriggerAxis() >= 0.25)
-        .toggleOnTrue(new InstantCommand(() -> m_thrust = !m_thrust, m_robotDrive));
+        .toggleOnTrue(new InstantCommand(() -> m_thrust = true, m_robotDrive))
+        .toggleOnFalse(new InstantCommand(() -> m_thrust = false, m_robotDrive));
 
     // Toggle field-relative control
     new POVButton(m_driverController, 0)
@@ -161,16 +163,16 @@ public class RobotContainer {
 
     // Turn field relative
     new JoystickButton(m_driverController, XboxController.Button.kY.value)
-        .whileTrue(new TurnToAngleCommand(m_robotDrive, 0));
+        .onTrue(new TurnToAngleCommand(m_robotDrive, Units.degreesToRadians(0)));
 
     new JoystickButton(m_driverController, XboxController.Button.kB.value)
-        .whileTrue(new TurnToAngleCommand(m_robotDrive, 90));
+        .whileTrue(new TurnToAngleCommand(m_robotDrive, Units.degreesToRadians(90)));
 
     new JoystickButton(m_driverController, XboxController.Button.kA.value)
-        .whileTrue(new TurnToAngleCommand(m_robotDrive, 180));
+        .whileTrue(new TurnToAngleCommand(m_robotDrive, Units.degreesToRadians(180)));
 
     new JoystickButton(m_driverController, XboxController.Button.kX.value)
-        .whileTrue(new TurnToAngleCommand(m_robotDrive, -90));
+        .whileTrue(new TurnToAngleCommand(m_robotDrive, Units.degreesToRadians(270)));
     // endregion
 
     // region Mechanismer
@@ -222,7 +224,7 @@ public class RobotContainer {
   }
 
   private double driveStickCurve(double input) {
-    return Math.copySign(Math.pow(input, 3), input) * getThrustMultiplier();
+    return input * getThrustMultiplier();
   }
 
   private Set<String> getAutonomousRoutines() {

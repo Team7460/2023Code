@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -46,10 +47,12 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    SmartDashboard.putData("Gyro", m_robotContainer.m_robotDrive.m_gyro);
+    SmartDashboard.putNumber(
+        "Gyro", Units.degreesToRadians(m_robotContainer.m_robotDrive.m_gyro.getYaw()));
     SmartDashboard.putNumber("Compressor PSI", m_robotContainer.m_compressor.getPressure());
     SmartDashboard.putBoolean("Field Centric", m_robotContainer.m_isFieldCentric);
     SmartDashboard.putNumber("Time left (approximate)", DriverStation.getMatchTime());
+    SmartDashboard.putBoolean("Thrust", m_robotContainer.m_thrust);
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

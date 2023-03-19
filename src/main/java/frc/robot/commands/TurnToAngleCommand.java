@@ -2,12 +2,14 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class TurnToAngleCommand extends CommandBase {
   private final DriveSubsystem driveSubsystem;
-  private PIDController controller = new PIDController(1, 0, 0);
+  private PIDController controller = new PIDController(0.4, 0, 0);
   private final double angle;
 
   public TurnToAngleCommand(DriveSubsystem driveSubsystem, double angle) {
@@ -19,8 +21,9 @@ public class TurnToAngleCommand extends CommandBase {
   /** The initial subroutine of a command. Called once when the command is initially scheduled. */
   @Override
   public void initialize() {
-    controller.enableContinuousInput(-180, 180);
-    controller.setTolerance(2);
+    controller.enableContinuousInput(-Math.PI, Math.PI);
+    controller.setTolerance(Units.degreesToRadians(4));
+    SmartDashboard.putData("TurnPID", controller);
   }
 
   /**
@@ -29,9 +32,11 @@ public class TurnToAngleCommand extends CommandBase {
    */
   @Override
   public void execute() {
-    double output = controller.calculate(driveSubsystem.m_gyro.getYaw(), this.angle);
-    output = MathUtil.clamp(output, -0.2, 0.2);
-    driveSubsystem.drive(0, 0, output, false, false);
+    SmartDashboard.putNumber("Turn Error", controller.getPositionError());
+    double output =
+        controller.calculate(Units.degreesToRadians(driveSubsystem.m_gyro.getYaw()), this.angle);
+    output = MathUtil.clamp(output, -1, 1);
+    driveSubsystem.drive(0, 0, -output, false, false);
   }
 
   /**

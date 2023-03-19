@@ -4,7 +4,9 @@
 
 package frc.robot.subsystems;
 
-import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPoint;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -15,10 +17,12 @@ import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.NavX.AHRS;
 import frc.utils.SwerveUtils;
 import java.util.HashMap;
 import java.util.function.DoubleSupplier;
@@ -287,4 +291,15 @@ public class DriveSubsystem extends SubsystemBase {
    */
   // TILTED TOWERS AHAHAHAHAHAHAH
   public DoubleSupplier getTilt = () -> m_gyro.getRoll();
+
+  public CommandBase jankyTurnToAngle(double angle) {
+    return autoBuilder.followPath(
+        PathPlanner.generatePath(
+            new PathConstraints(3, 3),
+            PathPoint.fromCurrentHolonomicState(getPose(), new ChassisSpeeds(0, 0, 0)),
+            new PathPoint(
+                getPose().getTranslation(),
+                Rotation2d.fromRadians(0),
+                Rotation2d.fromRadians(angle))));
+  }
 }
