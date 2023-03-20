@@ -1,14 +1,14 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class BalanceCommand extends CommandBase {
   private final DriveSubsystem driveSubsystem;
 
-  private PIDController controller = new PIDController(1, 0, 0);
+  private final PIDController controller = new PIDController(0.0086, 0, 0.0003);
 
   public BalanceCommand(DriveSubsystem driveSubsystem) {
     this.driveSubsystem = driveSubsystem;
@@ -19,7 +19,8 @@ public class BalanceCommand extends CommandBase {
   @Override
   public void initialize() {
     controller.enableContinuousInput(-180, 180);
-    controller.setTolerance(2);
+    controller.setTolerance(0.2);
+
   }
 
   /**
@@ -29,7 +30,7 @@ public class BalanceCommand extends CommandBase {
   @Override
   public void execute() {
     double output = controller.calculate(driveSubsystem.m_gyro.getRoll(), 0);
-    output = MathUtil.clamp(output, -0.2, 0.2);
+    SmartDashboard.putNumber("Balance error", controller.getPositionError());
     driveSubsystem.drive(-output, 0, 0, false, false);
   }
 
@@ -60,7 +61,6 @@ public class BalanceCommand extends CommandBase {
    */
   @Override
   public void end(boolean interrupted) {
-    driveSubsystem.drive(0, 0, 0, false, false);
     driveSubsystem.setX();
   }
 }
