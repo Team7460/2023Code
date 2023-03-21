@@ -53,6 +53,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Field Centric", m_robotContainer.m_isFieldCentric);
     SmartDashboard.putNumber("Time left (approximate)", DriverStation.getMatchTime());
     SmartDashboard.putBoolean("Thrust", m_robotContainer.m_thrust);
+    SmartDashboard.putNumber("Arm Pos", m_robotContainer.m_arm.getPivotMotorPosition());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

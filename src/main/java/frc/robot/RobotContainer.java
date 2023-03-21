@@ -163,7 +163,7 @@ public class RobotContainer {
 
     // Turn field relative
     new JoystickButton(m_driverController, XboxController.Button.kY.value)
-        .onTrue(new TurnToAngleCommand(m_robotDrive, Units.degreesToRadians(0)));
+        .whileTrue(new TurnToAngleCommand(m_robotDrive, Units.degreesToRadians(0)));
 
     new JoystickButton(m_driverController, XboxController.Button.kB.value)
         .whileTrue(new TurnToAngleCommand(m_robotDrive, Units.degreesToRadians(90)));
@@ -212,7 +212,7 @@ public class RobotContainer {
     return new SequentialCommandGroup(
         new WaitCommand(SmartDashboard.getNumber("Auto Delay", 0)),
         m_robotDrive.autoBuilder.fullAuto(pathGroup),
-        new RunCommand(m_robotDrive::setX, m_robotDrive));
+        new BalanceCommand(m_robotDrive));
   }
 
   private double getThrustMultiplier() {
