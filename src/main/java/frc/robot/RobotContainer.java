@@ -163,16 +163,24 @@ public class RobotContainer {
 
     // Turn field relative
     new JoystickButton(m_driverController, XboxController.Button.kY.value)
-        .whileTrue(new TurnToAngleCommand(m_robotDrive, Units.degreesToRadians(0)));
+        .whileTrue(
+            new TurnToAngleCommand(
+                m_robotDrive, Units.degreesToRadians(0), m_driverController, m_isFieldCentric));
 
     new JoystickButton(m_driverController, XboxController.Button.kB.value)
-        .whileTrue(new TurnToAngleCommand(m_robotDrive, Units.degreesToRadians(90)));
+        .whileTrue(
+            new TurnToAngleCommand(
+                m_robotDrive, Units.degreesToRadians(90), m_driverController, m_isFieldCentric));
 
     new JoystickButton(m_driverController, XboxController.Button.kA.value)
-        .whileTrue(new TurnToAngleCommand(m_robotDrive, Units.degreesToRadians(180)));
+        .whileTrue(
+            new TurnToAngleCommand(
+                m_robotDrive, Units.degreesToRadians(180), m_driverController, m_isFieldCentric));
 
     new JoystickButton(m_driverController, XboxController.Button.kX.value)
-        .whileTrue(new TurnToAngleCommand(m_robotDrive, Units.degreesToRadians(270)));
+        .whileTrue(
+            new TurnToAngleCommand(
+                m_robotDrive, Units.degreesToRadians(270), m_driverController, m_isFieldCentric));
     // endregion
 
     // region Mechanismer

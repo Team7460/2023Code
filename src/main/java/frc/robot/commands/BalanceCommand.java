@@ -20,7 +20,6 @@ public class BalanceCommand extends CommandBase {
   public void initialize() {
     controller.enableContinuousInput(-180, 180);
     controller.setTolerance(0.1);
-
   }
 
   /**

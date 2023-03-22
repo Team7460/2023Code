@@ -3,18 +3,29 @@ package frc.robot.commands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class TurnToAngleCommand extends CommandBase {
   private final DriveSubsystem driveSubsystem;
-  private PIDController controller = new PIDController(0.4, 0, 0);
+  private final boolean fieldRelative;
+  private final XboxController driverController;
+  private final PIDController controller = new PIDController(0.4, 0, 0);
   private final double angle;
 
-  public TurnToAngleCommand(DriveSubsystem driveSubsystem, double angle) {
+  public TurnToAngleCommand(
+      DriveSubsystem driveSubsystem,
+      double angle,
+      XboxController driverController,
+      boolean fieldRelative) {
     this.angle = angle;
     this.driveSubsystem = driveSubsystem;
+    this.driverController = driverController;
+    this.fieldRelative = fieldRelative;
+
     addRequirements(this.driveSubsystem);
   }
 
@@ -36,7 +47,20 @@ public class TurnToAngleCommand extends CommandBase {
     double output =
         controller.calculate(Units.degreesToRadians(driveSubsystem.m_gyro.getYaw()), this.angle);
     output = MathUtil.clamp(output, -1, 1);
-    driveSubsystem.drive(0, 0, -output, false, false);
+    driveSubsystem.drive(
+        MathUtil.applyDeadband(
+            driverController.getLeftY() * 0.6, Constants.OIConstants.kDriveDeadband),
+        MathUtil.applyDeadband(
+            driverController.getRightY() * 0.6, Constants.OIConstants.kDriveDeadband),
+        -output,
+        fieldRelative,
+        false);
+    // would changing the two 0s to:
+    /*MathUtil.applyDeadband(
+    driveStickCurve(m_driverController.getLeftY()), Constants.OIConstants.kDriveDeadband),
+    MathUtil.applyDeadband(
+            driveStickCurve(m_driverController.getLeftX()), Constants.OIConstants.kDriveDeadband),*/
+    // let us keep driving while aligning?
   }
 
   /**
