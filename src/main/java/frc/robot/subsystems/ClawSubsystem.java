@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class ClawSubsystem extends SubsystemBase {
   DoubleSolenoid mSolenoid =
@@ -20,7 +21,7 @@ public class ClawSubsystem extends SubsystemBase {
     mSolenoid.set(DoubleSolenoid.Value.kReverse);
   }
 
-  public ClawSubsystem() {
+  public ClawSubsystem(RobotContainer robotContainer) {
     addChild("solenoid", mSolenoid);
   }
 }

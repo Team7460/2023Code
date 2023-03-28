@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class ArmSubsystem extends SubsystemBase {
   CANSparkMax mArmPivotMotor =
@@ -30,7 +31,6 @@ public class ArmSubsystem extends SubsystemBase {
             sp,
             -mArmPivotMotor.getSoftLimit(CANSparkMax.SoftLimitDirection.kReverse),
             mArmPivotMotor.getSoftLimit(CANSparkMax.SoftLimitDirection.kForward));
-    System.out.println(sp);
     mArmPivotMotor.getPIDController().setReference(setpoint, CANSparkMax.ControlType.kPosition);
   }
 
@@ -42,7 +42,7 @@ public class ArmSubsystem extends SubsystemBase {
     return setpoint;
   }
 
-  public ArmSubsystem() {
+  public ArmSubsystem(RobotContainer robotContainer) {
     mArmPivotMotor.getPIDController().setP(0.1);
   }
 }

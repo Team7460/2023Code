@@ -33,7 +33,7 @@ public class TurnToAngleCommand extends CommandBase {
   @Override
   public void initialize() {
     controller.enableContinuousInput(-Math.PI, Math.PI);
-    controller.setTolerance(Units.degreesToRadians(2));
+    controller.setTolerance(Units.degreesToRadians(1.5));
     SmartDashboard.putData("TurnPID", controller);
   }
 

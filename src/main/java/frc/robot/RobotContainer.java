@@ -42,9 +42,11 @@ import java.util.stream.Stream;
  */
 public class RobotContainer {
   // The robot's subsystems
-  final DriveSubsystem m_robotDrive = new DriveSubsystem();
-  final ClawSubsystem m_claw = new ClawSubsystem();
-  final ArmSubsystem m_arm = new ArmSubsystem();
+
+  public final ClawSubsystem m_claw = new ClawSubsystem(this);
+  public final ArmSubsystem m_arm = new ArmSubsystem(this);
+
+  final DriveSubsystem m_robotDrive = new DriveSubsystem(this);
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -84,7 +86,7 @@ public class RobotContainer {
       System.out.println("Added " + routine);
     }
 
-    m_chooser.setDefaultOption("No Auto", "No Auto");
+    m_chooser.setDefaultOption("Wire Place-Balance", "Wire Place-Balance");
     SmartDashboard.putData(m_chooser);
 
     // Configure the button bindings
@@ -155,7 +157,10 @@ public class RobotContainer {
         .toggleOnTrue(new InstantCommand(() -> m_isFieldCentric = !m_isFieldCentric, m_robotDrive));
 
     // Autobalance
-    new POVButton(m_driverController, 90).onTrue(new BalanceCommand(m_robotDrive));
+    new POVButton(m_driverController, 90)
+        .onTrue(
+            new SequentialCommandGroup(
+                new BalanceCommand(m_robotDrive), new RunCommand(m_robotDrive::setX)));
 
     // Hold the robot in an X shape
     new POVButton(m_driverController, 180)
@@ -220,7 +225,8 @@ public class RobotContainer {
     return new SequentialCommandGroup(
         new WaitCommand(SmartDashboard.getNumber("Auto Delay", 0)),
         m_robotDrive.autoBuilder.fullAuto(pathGroup),
-        new BalanceCommand(m_robotDrive));
+        new BalanceCommand(m_robotDrive),
+        new InstantCommand(m_robotDrive::setX));
   }
 
   private double getThrustMultiplier() {
