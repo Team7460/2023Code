@@ -26,58 +26,6 @@
     },
     {
       "anchorPoint": {
-        "x": 2.558674117348235,
-        "y": 1.0449762328096084
-      },
-      "prevControl": {
-        "x": 2.301008744874633,
-        "y": 1.030661489894409
-      },
-      "nextControl": {
-        "x": 2.301008744874633,
-        "y": 1.030661489894409
-      },
-      "holonomicAngle": -90.0,
-      "isReversal": true,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": true,
-      "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 1.7713632570122286,
-        "y": 0.9018288036576078
-      },
-      "prevControl": {
-        "x": 3.0596901193802393,
-        "y": 0.9734025182336087
-      },
-      "nextControl": {
-        "x": 3.0596901193802393,
-        "y": 0.9734025182336087
-      },
-      "holonomicAngle": 0,
-      "isReversal": true,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": true,
-      "stopEvent": {
-        "names": [
-          "openClaw"
-        ],
-        "executionBehavior": "parallel",
-        "waitBehavior": "after",
-        "waitTime": 0.5
-      }
-    },
-    {
-      "anchorPoint": {
         "x": 3.446188178090642,
         "y": 0.8588845749120075
       },
@@ -105,16 +53,16 @@
     },
     {
       "anchorPoint": {
-        "x": 6.137359846148264,
-        "y": 3.4927972713088287
+        "x": 6.280507275300264,
+        "y": 2.934522297616024
       },
       "prevControl": {
         "x": 6.280507275300264,
-        "y": 1.130864690300809
+        "y": 0.5682558917140947
       },
       "nextControl": {
-        "x": 6.117442507690535,
-        "y": 3.82143335586136
+        "x": 6.280507275300264,
+        "y": 2.948837040531224
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -130,12 +78,12 @@
     },
     {
       "anchorPoint": {
-        "x": 3.875630465546646,
-        "y": 3.292390870496027
+        "x": 3.8899452084618455,
+        "y": 2.8772633259552234
       },
       "prevControl": {
-        "x": 4.920606698356254,
-        "y": 3.3782793279872276
+        "x": 4.877662469610654,
+        "y": 2.8629485830400236
       },
       "nextControl": null,
       "holonomicAngle": 0,

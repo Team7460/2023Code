@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.7570485140970284,
-        "y": 4.423255560796836
+        "x": 1.7284190282666283,
+        "y": 2.6911716680576223
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9431401719946302,
-        "y": 4.423255560796836
+        "x": 2.0003991436554305,
+        "y": 2.6768569251424217
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -20,30 +20,32 @@
           "armUpOut"
         ],
         "executionBehavior": "parallel",
-        "waitBehavior": "after",
+        "waitBehavior": "none",
         "waitTime": 0
       }
     },
     {
       "anchorPoint": {
-        "x": 6.180304074893864,
-        "y": 2.662542182227222
+        "x": 2.429841431111434,
+        "y": 2.6768569251424217
       },
       "prevControl": {
-        "x": 6.094415617402664,
-        "y": 6.527522769331252
+        "x": 2.086582866765739,
+        "y": 2.6970486053980505
       },
       "nextControl": {
-        "x": 6.187618693194847,
-        "y": 2.333384358683002
+        "x": 2.6731920606698356,
+        "y": 2.662542182227222
       },
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
+        "names": [
+          "armDownIn"
+        ],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
@@ -51,15 +53,15 @@
     },
     {
       "anchorPoint": {
-        "x": 3.9472041801226463,
-        "y": 2.5766537247360213
+        "x": 3.9328894372074457,
+        "y": 2.6911716680576223
       },
       "prevControl": {
-        "x": 4.992180412932255,
-        "y": 2.662542182227222
+        "x": 2.5873036031786345,
+        "y": 2.676856925142423
       },
       "nextControl": null,
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -72,15 +74,5 @@
       }
     }
   ],
-  "maxVelocity": 3.0,
-  "maxAcceleration": 3.0,
-  "isReversed": null,
-  "markers": [
-    {
-      "position": 0.6545454545454551,
-      "names": [
-        "armDownIn"
-      ]
-    }
-  ]
+  "markers": []
 }
