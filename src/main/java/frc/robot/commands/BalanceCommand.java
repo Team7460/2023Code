@@ -9,7 +9,7 @@ import frc.robot.subsystems.DriveSubsystem;
 public class BalanceCommand extends CommandBase {
   private final DriveSubsystem driveSubsystem;
 
-  private final PIDController controller = new PIDController(0.0095, 0, 0);
+  private final PIDController controller = new PIDController(0.0095, 0, 0, 0.01);
 
   public BalanceCommand(DriveSubsystem driveSubsystem) {
     this.driveSubsystem = driveSubsystem;
@@ -20,7 +20,7 @@ public class BalanceCommand extends CommandBase {
   @Override
   public void initialize() {
     controller.enableContinuousInput(-180, 180);
-    controller.setTolerance(0.5);
+    controller.setTolerance(1);
   }
 
   /**
@@ -30,7 +30,7 @@ public class BalanceCommand extends CommandBase {
   @Override
   public void execute() {
     double output = controller.calculate(driveSubsystem.m_gyro.getRoll(), 0);
-    output = MathUtil.clamp(output, -0.06, 0.06);
+    output = MathUtil.clamp(output, -0.069, 0.069); // I really don't like that this is the number but it is what it is *facedesk*
     SmartDashboard.putNumber("Balance error", controller.getPositionError());
     driveSubsystem.drive(-output, 0, 0, false, false);
   }

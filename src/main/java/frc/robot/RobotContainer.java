@@ -226,7 +226,9 @@ public class RobotContainer {
         new WaitCommand(SmartDashboard.getNumber("Auto Delay", 0)),
         m_robotDrive.autoBuilder.fullAuto(pathGroup),
         new BalanceCommand(m_robotDrive),
-        new InstantCommand(m_robotDrive::setX));
+        new WaitCommand(0.5),
+        new BalanceCommand(m_robotDrive),
+        new RunCommand(m_robotDrive::setX, m_robotDrive));
   }
 
   private double getThrustMultiplier() {
