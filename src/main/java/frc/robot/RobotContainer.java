@@ -22,11 +22,13 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.PneumaticConstants;
 import frc.robot.commands.BalanceCommand;
-import frc.robot.commands.LimelightCenterCommand;
 import frc.robot.commands.TurnToAngleCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
+import frc.robot.subsystems.CubeGrabberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import org.photonvision.PhotonCamera;
+
 import java.io.File;
 import java.util.List;
 import java.util.Objects;
@@ -45,6 +47,7 @@ public class RobotContainer {
 
   public final ClawSubsystem m_claw = new ClawSubsystem(this);
   public final ArmSubsystem m_arm = new ArmSubsystem(this);
+  public final CubeGrabberSubsystem m_cubeGrabber = new CubeGrabberSubsystem(this);
 
   final DriveSubsystem m_robotDrive = new DriveSubsystem(this);
 
@@ -64,6 +67,8 @@ public class RobotContainer {
   String m_autoChoosed;
 
   Compressor m_compressor = new Compressor(PneumaticConstants.kPcmId, PneumaticsModuleType.REVPH);
+
+  PhotonCamera camera = new PhotonCamera("photonvision");
 
   // are we field centric?
   boolean m_isFieldCentric = true;
@@ -197,8 +202,13 @@ public class RobotContainer {
     new JoystickButton(m_mechanismerController, XboxController.Button.kRightBumper.value)
         .whileTrue(new RunCommand(m_claw::openClaw));
 
-    new JoystickButton(m_mechanismerController, XboxController.Button.kA.value)
-        .whileTrue(new LimelightCenterCommand(m_robotDrive));
+    // Cube intake
+    new Trigger(() -> m_mechanismerController.getRightTriggerAxis() >= 0.25)
+        .whileTrue(new SequentialCommandGroup(m_cubeGrabber.bringOut(), m_cubeGrabber.eatCube().repeatedly()))
+        .whileFalse(m_cubeGrabber.bringIn());
+
+    new Trigger(() -> m_mechanismerController.getLeftTriggerAxis() >= 0.25)
+            .whileTrue(m_cubeGrabber.vomitCube().repeatedly());
 
     // Move the claw in and the arm down
     // TODO: do this

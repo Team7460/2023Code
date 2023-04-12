@@ -1,27 +1,52 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class BalanceCommand extends CommandBase {
   private final DriveSubsystem driveSubsystem;
 
-  private final PIDController controller = new PIDController(0.0095, 0, 0, 0.01);
+  private int state;
+  private int debounceCount;
+  private final double robotSpeedSlow;
+  private final double robotSpeedFast;
+  private final double onChargeStationDegree;
+  private final double levelDegree;
+  private final double debounceTime;
 
   public BalanceCommand(DriveSubsystem driveSubsystem) {
     this.driveSubsystem = driveSubsystem;
     addRequirements(this.driveSubsystem);
+
+    state = 0;
+    debounceCount = 0;
+
+    // Speed the robot drives while scoring/approaching station, default = 0.4
+    robotSpeedFast = 0.4;
+
+    // Speed the robot drives while balancing itself on the charge station.
+    // Should be roughly half the fast speed, to make the robot more accurate,
+    // default = 0.2
+    robotSpeedSlow = 0.2;
+
+    // Angle where the robot knows it is on the charge station, default = 13.0
+    onChargeStationDegree = 13.0;
+
+    // Angle where the robot can assume it is level on the charging station
+    // Used for exiting the drive forward sequence as well as for auto balancing,
+    // default = 6.0
+    levelDegree = 6.0;
+
+    // Amount of time a sensor condition needs to be met before changing states in
+    // seconds
+    // Reduces the impact of sensor noise, but too high can make the auto run
+    // slower, default = 0.2
+    debounceTime = 0.2;
   }
 
   /** The initial subroutine of a command. Called once when the command is initially scheduled. */
   @Override
-  public void initialize() {
-    controller.enableContinuousInput(-180, 180);
-    controller.setTolerance(1);
-  }
+  public void initialize() {}
 
   /**
    * The main body of a command. Called repeatedly while the command is scheduled. (That is, it is
@@ -29,10 +54,7 @@ public class BalanceCommand extends CommandBase {
    */
   @Override
   public void execute() {
-    double output = controller.calculate(driveSubsystem.m_gyro.getRoll(), 0);
-    output = MathUtil.clamp(output, -0.069, 0.069); // I really don't like that this is the number but it is what it is *facedesk*
-    SmartDashboard.putNumber("Balance error", controller.getPositionError());
-    driveSubsystem.drive(-output, 0, 0, false, false);
+    driveSubsystem.drive(calculateMotorSpeeds(), 0, 0, false, false);
   }
 
   /**
@@ -49,7 +71,7 @@ public class BalanceCommand extends CommandBase {
    */
   @Override
   public boolean isFinished() {
-    return controller.atSetpoint();
+    return state == 3;
   }
 
   /**
@@ -63,5 +85,54 @@ public class BalanceCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     driveSubsystem.setX();
+  }
+
+  public double calculateMotorSpeeds() {
+    switch (state) {
+        // drive forwards to approach station, exit when tilt is detected
+      case 0:
+        if (driveSubsystem.m_gyro.getRoll() > onChargeStationDegree) {
+          debounceCount++;
+        }
+        if (debounceCount > secondsToTicks(debounceTime)) {
+          state = 1;
+          debounceCount = 0;
+          return robotSpeedSlow;
+        }
+        return robotSpeedFast;
+        // driving up charge station, drive slower, stopping when level
+      case 1:
+        if (driveSubsystem.m_gyro.getRoll() < levelDegree) {
+          debounceCount++;
+        }
+        if (debounceCount > secondsToTicks(debounceTime)) {
+          state = 2;
+          debounceCount = 0;
+          return 0;
+        }
+        return robotSpeedSlow;
+        // on charge station, stop motors and wait for end of auto
+      case 2:
+        if (Math.abs(driveSubsystem.m_gyro.getRoll()) <= levelDegree / 2) {
+          debounceCount++;
+        }
+        if (debounceCount > secondsToTicks(debounceTime)) {
+          state = 4;
+          debounceCount = 0;
+          return 0;
+        }
+        if (driveSubsystem.m_gyro.getRoll() >= levelDegree) {
+          return 0.1;
+        } else if (driveSubsystem.m_gyro.getRoll() <= -levelDegree) {
+          return -0.1;
+        }
+      case 3:
+        return 0;
+    }
+    return 0;
+  }
+
+  public int secondsToTicks(double time) {
+    return (int) (time * 50);
   }
 }
