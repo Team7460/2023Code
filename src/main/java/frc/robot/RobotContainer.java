@@ -52,7 +52,7 @@ public class RobotContainer {
   final DriveSubsystem m_robotDrive = new DriveSubsystem(this);
 
   // The driver's controller
-  XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+  public XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
 
   // The mechanismer's controller
   XboxController m_mechanismerController =
@@ -68,7 +68,7 @@ public class RobotContainer {
 
   Compressor m_compressor = new Compressor(PneumaticConstants.kPcmId, PneumaticsModuleType.REVPH);
 
-  PhotonCamera camera = new PhotonCamera("photonvision");
+  public PhotonCamera camera = new PhotonCamera("photonvision");
 
   // are we field centric?
   boolean m_isFieldCentric = true;
@@ -194,6 +194,9 @@ public class RobotContainer {
     // endregion
 
     // region Mechanismer
+    // TODO: Preset arm positions
+    // You shouldn't need to touch anything outside of this section
+
     // Close the claw
     new JoystickButton(m_mechanismerController, XboxController.Button.kLeftBumper.value)
         .whileTrue(new RunCommand(m_claw::closeClaw));
@@ -203,12 +206,34 @@ public class RobotContainer {
         .whileTrue(new RunCommand(m_claw::openClaw));
 
     // Cube intake
-    new Trigger(() -> m_mechanismerController.getRightTriggerAxis() >= 0.25)
-        .whileTrue(new SequentialCommandGroup(m_cubeGrabber.bringOut(), m_cubeGrabber.eatCube().repeatedly()))
-        .whileFalse(m_cubeGrabber.bringIn());
 
+    //    new Trigger(() -> m_mechanismerController.getRightTriggerAxis() >= 0.25)
+    //            .whileTrue(new RunCommand(() -> m_cubeGrabber.m_pivotMotor.set(-0.2)));
+    //
+    //    new Trigger(() -> m_mechanismerController.getLeftTriggerAxis() >= 0.25)
+    //            .whileTrue(new RunCommand(() -> m_cubeGrabber.m_pivotMotor.set(0.7)));
+    //
+    new JoystickButton(m_mechanismerController, XboxController.Button.kA.value)
+        .whileTrue(new InstantCommand(m_cubeGrabber::eatCube, m_cubeGrabber))
+        .whileFalse(new InstantCommand(() -> m_cubeGrabber.m_intakeMotor.set(0), m_cubeGrabber));
+    //
+    //    new JoystickButton(m_mechanismerController, XboxController.Button.kB.value)
+    //            .whileTrue(m_cubeGrabber.vomitCube());
+
+    new Trigger(() -> m_mechanismerController.getRightTriggerAxis() >= 0.25)
+        .whileTrue(
+            new SequentialCommandGroup(
+                new InstantCommand(m_cubeGrabber::bringOut, m_cubeGrabber),
+                new InstantCommand(() -> m_cubeGrabber.m_intakeMotor.set(-1), m_cubeGrabber)))
+        .whileFalse(
+            new SequentialCommandGroup(
+                new InstantCommand(m_cubeGrabber::bringIn, m_cubeGrabber),
+                new InstantCommand(() -> m_cubeGrabber.m_intakeMotor.set(0), m_cubeGrabber)));
     new Trigger(() -> m_mechanismerController.getLeftTriggerAxis() >= 0.25)
-            .whileTrue(m_cubeGrabber.vomitCube().repeatedly());
+        .whileTrue(new InstantCommand(m_cubeGrabber::vomitCube, m_cubeGrabber))
+        .whileFalse(new InstantCommand(() -> m_cubeGrabber.m_intakeMotor.set(0), m_cubeGrabber));
+
+    // Wheel speeds are in CubeGrabberSubsystem, Trevor.
 
     // Move the claw in and the arm down
     // TODO: do this
@@ -233,6 +258,8 @@ public class RobotContainer {
                 AutoConstants.kMaxSpeedMetersPerSecond,
                 AutoConstants.kMaxAccelerationMetersPerSecondSquared));
     return new SequentialCommandGroup(
+        new InstantCommand(m_cubeGrabber::bringIn, m_cubeGrabber),
+        new InstantCommand(m_cubeGrabber::vomitCube, m_cubeGrabber),
         new WaitCommand(SmartDashboard.getNumber("Auto Delay", 0)),
         m_robotDrive.autoBuilder.fullAuto(pathGroup),
         new BalanceCommand(m_robotDrive),

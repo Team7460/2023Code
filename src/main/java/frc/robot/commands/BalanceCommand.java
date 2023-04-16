@@ -14,6 +14,9 @@ public class BalanceCommand extends CommandBase {
   private final double levelDegree;
   private final double debounceTime;
 
+  private int tickDivider;
+
+  private long autoBalanceTicks;
   public BalanceCommand(DriveSubsystem driveSubsystem) {
     this.driveSubsystem = driveSubsystem;
     addRequirements(this.driveSubsystem);
@@ -27,7 +30,7 @@ public class BalanceCommand extends CommandBase {
     // Speed the robot drives while balancing itself on the charge station.
     // Should be roughly half the fast speed, to make the robot more accurate,
     // default = 0.2
-    robotSpeedSlow = 0.069;
+    robotSpeedSlow = 0.0695;
 
     // Angle where the robot knows it is on the charge station, default = 13.0
     onChargeStationDegree = 12.0;
@@ -42,6 +45,8 @@ public class BalanceCommand extends CommandBase {
     // Reduces the impact of sensor noise, but too high can make the auto run
     // slower, default = 0.2
     debounceTime = 0.1;
+
+    tickDivider = 80;
   }
 
   /** The initial subroutine of a command. Called once when the command is initially scheduled. */
@@ -54,7 +59,12 @@ public class BalanceCommand extends CommandBase {
    */
   @Override
   public void execute() {
-    driveSubsystem.drive(-calculateMotorSpeeds(), 0, 0, false, false);
+    double toDrive = -calculateMotorSpeeds();
+    if (toDrive == 0){
+      driveSubsystem.setX();
+    } else {
+      driveSubsystem.drive(toDrive, 0, 0, false, false);
+    }
   }
 
   /**
@@ -102,6 +112,7 @@ public class BalanceCommand extends CommandBase {
         return robotSpeedFast;
         // driving up charge station, drive slower, stopping when level
       case 1:
+        autoBalanceTicks++;
         if (-driveSubsystem.m_gyro.getRoll() < levelDegree) {
           debounceCount++;
         }
@@ -110,6 +121,16 @@ public class BalanceCommand extends CommandBase {
           debounceCount = 0;
           return 0;
         }
+        if (autoBalanceTicks % 100 > tickDivider) {
+          if(autoBalanceTicks % 100 == tickDivider) {
+            if(tickDivider > 10) {
+              tickDivider -= 5;
+            }
+          }
+          driveSubsystem.setX();
+          return 0;
+        }
+
         return robotSpeedSlow;
         // on charge station, stop motors and wait for end of auto
       case 2:

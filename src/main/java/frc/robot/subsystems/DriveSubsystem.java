@@ -66,9 +66,11 @@ public class DriveSubsystem extends SubsystemBase {
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
+  public RobotContainer robotContainer;
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem(RobotContainer robotContainer) {
+    this.robotContainer = robotContainer;
     m_gyro = new AHRS(SPI.Port.kMXP);
     m_gyro.enableLogging(true);
 

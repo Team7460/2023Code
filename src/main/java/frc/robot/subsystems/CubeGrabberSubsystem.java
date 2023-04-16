@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -31,27 +30,26 @@ public class CubeGrabberSubsystem extends SubsystemBase {
             sp,
             m_pivotMotor.getSoftLimit(CANSparkMax.SoftLimitDirection.kReverse),
             m_pivotMotor.getSoftLimit(CANSparkMax.SoftLimitDirection.kForward));
-    m_pivotMotor.getPIDController().setReference(setpoint, CANSparkMax.ControlType.kSmartMotion);
+    m_pivotMotor.getPIDController().setReference(setpoint, CANSparkMax.ControlType.kPosition);
   }
 
   public double getPivotMotorPosition() {
     return m_pivotMotor.getEncoder().getPosition();
   }
 
-  public CommandBase bringIn() {
-    return this.run(() -> setPivotMotorPositionSetpoint(1));
+  public void bringIn() {
+    setPivotMotorPositionSetpoint(1);
   }
 
-  public CommandBase bringOut() {
-    return this.run(() -> setPivotMotorPositionSetpoint(-10));
+  public void bringOut() {
+    setPivotMotorPositionSetpoint(19);
   }
 
-  public CommandBase eatCube() {
-    return this.run(() -> m_intakeMotor.set(1));
+  public void eatCube() {
+    m_intakeMotor.set(-1);
   }
 
-  public CommandBase vomitCube() {
-    return this.run(() -> m_intakeMotor.set(-1));
+  public void vomitCube() {
+    m_intakeMotor.set(1);
   }
-
 }
