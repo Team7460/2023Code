@@ -22,15 +22,15 @@ public class BalanceCommand extends CommandBase {
     debounceCount = 0;
 
     // Speed the robot drives while scoring/approaching station, default = 0.4
-    robotSpeedFast = 0.4;
+    robotSpeedFast = 0.12;
 
     // Speed the robot drives while balancing itself on the charge station.
     // Should be roughly half the fast speed, to make the robot more accurate,
     // default = 0.2
-    robotSpeedSlow = 0.2;
+    robotSpeedSlow = 0.069;
 
     // Angle where the robot knows it is on the charge station, default = 13.0
-    onChargeStationDegree = 13.0;
+    onChargeStationDegree = 12.0;
 
     // Angle where the robot can assume it is level on the charging station
     // Used for exiting the drive forward sequence as well as for auto balancing,
@@ -41,7 +41,7 @@ public class BalanceCommand extends CommandBase {
     // seconds
     // Reduces the impact of sensor noise, but too high can make the auto run
     // slower, default = 0.2
-    debounceTime = 0.2;
+    debounceTime = 0.1;
   }
 
   /** The initial subroutine of a command. Called once when the command is initially scheduled. */
@@ -54,7 +54,7 @@ public class BalanceCommand extends CommandBase {
    */
   @Override
   public void execute() {
-    driveSubsystem.drive(calculateMotorSpeeds(), 0, 0, false, false);
+    driveSubsystem.drive(-calculateMotorSpeeds(), 0, 0, false, false);
   }
 
   /**
@@ -91,7 +91,7 @@ public class BalanceCommand extends CommandBase {
     switch (state) {
         // drive forwards to approach station, exit when tilt is detected
       case 0:
-        if (driveSubsystem.m_gyro.getRoll() > onChargeStationDegree) {
+        if (-driveSubsystem.m_gyro.getRoll() > onChargeStationDegree) {
           debounceCount++;
         }
         if (debounceCount > secondsToTicks(debounceTime)) {
@@ -102,7 +102,7 @@ public class BalanceCommand extends CommandBase {
         return robotSpeedFast;
         // driving up charge station, drive slower, stopping when level
       case 1:
-        if (driveSubsystem.m_gyro.getRoll() < levelDegree) {
+        if (-driveSubsystem.m_gyro.getRoll() < levelDegree) {
           debounceCount++;
         }
         if (debounceCount > secondsToTicks(debounceTime)) {
@@ -113,7 +113,7 @@ public class BalanceCommand extends CommandBase {
         return robotSpeedSlow;
         // on charge station, stop motors and wait for end of auto
       case 2:
-        if (Math.abs(driveSubsystem.m_gyro.getRoll()) <= levelDegree / 2) {
+        if (Math.abs(-driveSubsystem.m_gyro.getRoll()) <= levelDegree / 2) {
           debounceCount++;
         }
         if (debounceCount > secondsToTicks(debounceTime)) {
@@ -121,9 +121,9 @@ public class BalanceCommand extends CommandBase {
           debounceCount = 0;
           return 0;
         }
-        if (driveSubsystem.m_gyro.getRoll() >= levelDegree) {
+        if (-driveSubsystem.m_gyro.getRoll() >= levelDegree) {
           return 0.1;
-        } else if (driveSubsystem.m_gyro.getRoll() <= -levelDegree) {
+        } else if (-driveSubsystem.m_gyro.getRoll() <= -levelDegree) {
           return -0.1;
         }
       case 3:
